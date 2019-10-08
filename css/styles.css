@@ -1,0 +1,84 @@
+*{
+  box-sizing: border-box;
+}
+
+h2{
+  line-height: 5px;
+  text-align: center;
+}
+
+body{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.chatSection{
+  width: 90vw;
+  height: 85vh;
+  background-color: rgba(90,80,120,0.12);
+  border: 1px solid black;
+}
+
+.message_FormSection{
+  height: 10vh;
+  width: 90vw;
+  display: flex;
+  align-items: center;
+}
+
+.message_Textfield{
+  height: 100%;
+  width: 80%;
+  resize: none;
+}
+
+.submit_button{
+  height: 100%;
+  width: 20%;
+}
+
+.overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right : 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 1);
+
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.login_form{
+  height: auto;
+  width: 20%;
+  background-color: rgb(255, 255, 255);
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  padding: 5px;
+}
+
+.login_row{
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  height: 50%;
+}
+
+.login_Textfield{
+  resize: none;
+  width: 50%;
+}
+
+.login_button{
+  width: auto;
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>Секретный чатик</title>
+  </head>
+  <body>
+
+    <div class="chatSection" id="all_messages">
+      <div id="login" class="login">
+
+      </div>
+    </div>
+
+    <div class="message_FormSection" id="message_form">
+        <textarea class="message_Textfield" placeholder="Напишите сообщение..." id="message"></textarea>
+        <input type="submit" class="submit_button" value="Высрать" onclick="test()"/>
+    </div>
+
+<!-- //оверлей - отображение формы на затемненном фоне -->
+  <div class="overlay" id="overlay">
+    <div class="login_form" id="login_form">
+        <h2>Введите ваше погоняло</h2>
+        <input name="login" required type="login_form" class="login_Textfield" placeholder="Хуйло" id="login_input"/>
+        <hr>
+        <input type="submit" class="login_button" value="Войти в чатик" onclick="setLogin()"/>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script src="scripts.js"></script>
+  </body>
+</html>
