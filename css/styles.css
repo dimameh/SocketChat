@@ -1,84 +1,93 @@
 *{
-  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-h2{
-  line-height: 5px;
-  text-align: center;
+h1{
+  color: white;
 }
 
 body{
-  align-items: center;
+  background-color: #3a424f;
+}
+
+.userBar{
+  height: 100vh;
+  width: 320px;
+  background-color: #515c6e;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
-.chatSection{
-  width: 90vw;
-  height: 85vh;
-  background-color: rgba(90,80,120,0.12);
-  border: 1px solid black;
-}
-
-.message_FormSection{
-  height: 10vh;
-  width: 90vw;
+.logo{
+  background-color: #453073;
+  padding: 10px;
   display: flex;
   align-items: center;
 }
 
-.message_Textfield{
-  height: 100%;
-  width: 80%;
-  resize: none;
+.chatLogo{
+  margin-right: 10px;
+  background-color: white;
+  height: 2.5em;
+  width: 2.5em;
+  border-radius: 2000px;
 }
 
-.submit_button{
-  height: 100%;
-  width: 20%;
+.users_count{
+  font-family: "Fa Solid";
+  font-size: 20px;
+  line-height: 2.5em;
+  color: #8c97a9;
+  background-color: #3a424f;
+  text-align: center;
 }
 
-.overlay{
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right : 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 100;
-    background-color: rgba(0, 0, 0, 1);
-
-    align-items: center;
-    display: flex;
-    justify-content: center;
-}
-
-.login_form{
+.users_container{
+  background-color: #515c6e;
   height: auto;
-  width: 20%;
-  background-color: rgb(255, 255, 255);
-  align-items: center;
+  flex-grow: 1;
+}
+
+.user{
+  font-family: "Fa Solid";
   display: flex;
-  justify-content: center;
-  flex-flow: column;
-  padding: 5px;
-}
-
-.login_row{
   align-items: center;
+  padding: 15px;
+  padding-left: 25px;
+  border-top: #8d98aa solid 2px;
+  border-bottom: #8d98aa solid 2px;
+  /* TODO: Решить проблему с рамками */
+  -moz-box-sizing: content-box; /* Для Firefox */
+  -webkit-box-sizing: content-box; /* Для Safari и Chrome */
+  box-sizing: content-box;
+}
+
+.user>p{
+  color: white;
+  font-size: 20px;
+  margin-left: 10px
+}
+
+.online{
+  color: #a0d998;
+}
+
+.offline{
+  color: #d57f79;
+}
+
+.clientProfile{
+  background-color: #3a424f;
   display: flex;
-  justify-content: center;
-  flex-flow: column;
-  height: 50%;
+  padding: 10px;
+  margin-top: auto;
 }
 
-.login_Textfield{
-  resize: none;
-  width: 50%;
-}
-
-.login_button{
-  width: auto;
+.clientAvatar{
+  border: #453073 solid 2px;
+  border-radius: 2000px;
+  background-color: white;
+  height: 50px;
+  width: 50px;
 }

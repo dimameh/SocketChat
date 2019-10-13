@@ -1,0 +1,7 @@
+@font-face {
+  font-family: "Fa Solid";
+  src: url("../fonts/fa-solid-900.eot");
+  src: url("../fonts/fa-solid-900.eot?#iefix")format("embeded-opentype"),
+  url("../fonts/fa-solid-900.woff")format("woff"),
+  url("../fonts/fa-solid-900.ttf")format("truetype");
+}

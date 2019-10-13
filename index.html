@@ -3,30 +3,48 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <title>Секретный чатик</title>
+    <link rel="stylesheet" type="text/css" href="css/fonts.css">
+    <title>Классный чатик</title>
   </head>
   <body>
+    <div class="userBar">
 
-    <div class="chatSection" id="all_messages">
-      <div id="login" class="login">
+      <div class="logo">
+        <div class="chatLogo"></div>
+        <h1>Классный чатик</h1>
+      </div>
 
+      <div class="users_count">
+         18 Человек
+      </div>
+
+      <!--
+      онлайн - 
+      оффлайн - 
+      -------------->
+      <div class="users_container">
+        <div class="user online">
+           <p>Всякие</p>
+        </div>
+        <div class="user online">
+           <p>Разные</p>
+        </div>
+        <div class="user online">
+           <p>Люди</p>
+        </div>
+        <div class="user offline">
+           <p>Кто-то</p>
+        </div>
+        <div class="user offline">
+           <p>Оффлайн</p>
+        </div>
+      </div>
+
+      <div class="clientProfile">
+        <div class="clientAvatar"></div>
+        Дима
       </div>
     </div>
-
-    <div class="message_FormSection" id="message_form">
-        <textarea class="message_Textfield" placeholder="Напишите сообщение..." id="message"></textarea>
-        <input type="submit" class="submit_button" value="Высрать" onclick="test()"/>
-    </div>
-
-<!-- //оверлей - отображение формы на затемненном фоне -->
-  <div class="overlay" id="overlay">
-    <div class="login_form" id="login_form">
-        <h2>Введите ваше погоняло</h2>
-        <input name="login" required type="login_form" class="login_Textfield" placeholder="Хуйло" id="login_input"/>
-        <hr>
-        <input type="submit" class="login_button" value="Войти в чатик" onclick="setLogin()"/>
-    </div>
-  </div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
