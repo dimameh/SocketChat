@@ -20,7 +20,7 @@ app.get('/', function (request, response){
 });
 
 //----------------------- POST -------------
-
+//TODO: переделать на Ajax
 app.post('/createAccount', function (request, response){
   //TODO: добавить проверки на то что приходит.
 
@@ -58,44 +58,72 @@ connection.connect(error => {
   }
 });
 
+//Добавить нового юзера в БД
+function AddNewUser(login, password){
+  connection.query('INSERT INTO `users` (`login`, `password`, `avatar`) VALUES (?, ?, NULL);',[login, password], function(error, results){
+    if(error)
+    {
+      LogMessage("Ошибка регистрации пользователя: ");
+      throw error;
+      //TODO: Добавить throw и обработчик ошибки добавления пользователя
+    }
+    else
+    {
+      LogMessage("Создан аккаунт [login: " + login + "]: "+ results.propertyName);
+    }
+  });
+}
+
+//Добавить в БД ссылку на новый аватар для юзера
+function AddAvatarForUser(login, filePath){
+  connection.query('UPDATE `users` SET `avatar` = ? WHERE `users`.`login` = ?;', [filePath, login], function(error){
+    if(error)
+    {
+      LogMessage("Ошибка добавления аватара пользователю [" + login + "]: ");
+      throw error;
+      //TODO: Добавить throw и обработчик ошибки
+    }
+    else
+    {
+      LogMessage("Добавлен аватар для пользователя [login: " + login + "]")
+    }
+  });
+}
+
+//Добавляет в БД новое сообщение, после чего возвращает время его добавления
+function AddNewMessage(login, text){
+  let time = GetCurrentTime();
+  connection.query('INSERT INTO `messages` (`login`, `message_text`, `time`) VALUES (?, ?, ?);', [login, text, time], function(error, results){
+    if(error)
+    {
+      LogMessage("Ошибка добавления сообщения в бд: ");
+      throw error;
+      //TODO: Добавить throw и обработчик ошибки
+    }
+    else
+    {
+      LogMessage("Пользователь [login: " + login + "] прислал сообщение: " + results);
+    }
+  });
+
+  return time;
+}
+
 //---------- Функции сервера --------------------------------------------------------------
-
-function GetLogTime(){
-  let date = new Date();
-  return '['+ date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds() + ']: ';
-}
-
-function LogMessage(message){
-  console.log(GetLogTime() + message);
-}
-
-//Получить расширение файла без точки. Прим.: jpg
-function GetFileExtension(filename){
-  return filename.split('.').pop();
-}
 
 //Зарегистрировать новый аккаунт
 function CreateAccount(login, password){
   //...проверки
   //TODO: Обязательно валидацию логина!!
   //...
-  connection.query('INSERT INTO `users` (`login`, `password`, `avatar`, `id`) VALUES (?, ?, NULL, NULL);',[login, password], function(error){
-    if(error)
-    {
-      LogMessage("Ошибка регистрации пользователя: " + error);
-      //TODO: Добавить throw и обработчик ошибки добавления пользователя
-    }
-    else
-    {
-      LogMessage("Создан аккаунт [login: " + login + "]")
-    }
-  });
+  AddNewUser(login, password);
 }
 
 //Установить аватар для пользователя под ником login
 function SetAvatar(login, file){
   let extension = GetFileExtension(file.name);
   let filePath = "avatars/" + login + '.' + extension;
+
   file.mv(filePath, function(error){
     if(error)
     {
@@ -108,18 +136,32 @@ function SetAvatar(login, file){
     }
   });
 
-  connection.query('UPDATE `users` SET `avatar` = ? WHERE `users`.`login` = 1;', [filePath], function(error){
-    if(error)
-    {
-      LogMessage("Ошибка добавления аватара пользователю [" + login + "]: " + error);
-      //TODO: Добавить throw и обработчик ошибки
-    }
-    else
-    {
-      LogMessage("Добавлен аватар для пользователя [login: " + login + "]")
-    }
-  });
+  AddAvatarForUser(login, filePath);
 };
+
+//---------- Служебные функции --------------------------------------------------------------
+
+//Возвращает строку в которой записано время. Используется в логах
+function GetLogTime(){
+  let date = new Date();
+  return '['+ date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds() + ']: ';
+}
+
+//Вывести в лог сообщение
+function LogMessage(message){
+  console.log(GetLogTime() + message);
+}
+
+//Получить расширение файла без точки. Прим.: jpg
+function GetFileExtension(filename){
+  return filename.split('.').pop();
+}
+
+//Возвращает текущие дату и время в формате используемом БД
+function GetCurrentTime(){
+  let date = new Date();
+  return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+}
 
 //------------------------ События --------------------------------------------------------------------
 
@@ -140,8 +182,10 @@ io.sockets.on('connection', function(socket){
   });
 
   socket.on('send_message', function(data){
+    let time = AddNewMessage(data.login, data.message);
+    console.log(time);
     //вызываем событие и передаем в событие объект
-    io.sockets.emit('add_new_message', {message : data.message, login : data.login});
+    io.sockets.emit('add_new_message', {message: data.message, login: data.login, time: time});
     LogMessage(data.login + " Отправил сообщение");
   });
 

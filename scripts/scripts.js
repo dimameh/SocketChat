@@ -33,6 +33,7 @@ function turnOffOverlay(){
 //Создать новый аккаунт. Возвращает true если все переданные перменные валидируются,
 //после чего отправляет их на сервер. В случае не прохождения валидации одной из переменных,
 //функция вернет false и ничего не отправит. для onsubmit. Action: /createAccount
+//onsubmit="return Register(this.login.value, this.password.value, this.filename.value)"
 function Register(login, password, avatar){
   if(IsFileImage(avatar)/*TODO: Добавить валидацию паролей и логинов*/)
   {
@@ -77,5 +78,5 @@ var textarea = $("#message");
 var messages = $("#all_messages");
 
 socket.on('add_new_message', function(data){
-  messages.append("<div>" + data.login + ": " + data.message + "<div>");
+  messages.append("<div>" + data.login + ": " + data.message +  " - " + data.time + "<div>");
 });
