@@ -16,7 +16,7 @@ app.use(express.static(__dirname));
 //----------------------- GET -------------
 
 app.get('/', function (request, response){
-  response.sendFile(__dirname + '/index.html');
+  response.sendFile(__dirname.substring(0, __dirname.length - 7) + '/index.html');
 });
 
 //----------------------- POST -------------
