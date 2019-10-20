@@ -5,8 +5,8 @@ const imageExtensions = ['jpg', 'jpeg', 'png', 'tiff', 'tif', 'bmp', 'dib'];
 const socket = io.connect();
 
 //----------------- Функции ----------------------------------
-function setLogin(){
-  login = document.getElementById("login_input").value;
+function setLogin(newLogin){
+  login = newLogin;
   if(login!="")
   {
     document.getElementById("login").innerHTML += "Здесь вы известны под именем: "+login;
@@ -37,13 +37,17 @@ function turnOffOverlay(){
 function Register(login, password, avatar){
   if(IsFileImage(avatar)/*TODO: Добавить валидацию паролей и логинов*/)
   {
-    socket.emit('add_new_user', {login: login, password: password, avatar: avatar})
+    socket.emit('add_new_user', {login: login, password: password, avatar: avatar});
     return true;
   }
   else
   {
     return false;
   }
+}
+
+function LogIn(){
+  socket.emit('login', {login: document.getElementById("login_form").value, password: document.getElementById("password").value});
 }
 
 //Отпправить новое сообщение
@@ -79,4 +83,8 @@ var messages = $("#all_messages");
 
 socket.on('add_new_message', function(data){
   messages.append("<div>" + data.login + ": " + data.message +  " - " + data.time + "<div>");
+});
+
+socket.on('correct_login', function(login){
+  setLogin(login);
 });

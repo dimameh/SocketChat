@@ -60,7 +60,8 @@ connection.connect(error => {
 
 //Добавить нового юзера в БД
 function AddNewUser(login, password){
-  connection.query('INSERT INTO `users` (`login`, `password`, `avatar`) VALUES (?, ?, NULL);',[login, password], function(error, results){
+  connection.query('INSERT INTO `users` (`login`, `password`, `avatar`) VALUES (?, ?, NULL);',[login, password], (error) =>
+  {
     if(error)
     {
       LogMessage("Ошибка регистрации пользователя: ");
@@ -69,14 +70,15 @@ function AddNewUser(login, password){
     }
     else
     {
-      LogMessage("Создан аккаунт [login: " + login + "]: "+ results.propertyName);
+      LogMessage("Создан аккаунт [login: " + login + "]");
     }
   });
 }
 
 //Добавить в БД ссылку на новый аватар для юзера
 function AddAvatarForUser(login, filePath){
-  connection.query('UPDATE `users` SET `avatar` = ? WHERE `users`.`login` = ?;', [filePath, login], function(error){
+  connection.query('UPDATE `users` SET `avatar` = ? WHERE `users`.`login` = ?;', [filePath, login], (error) =>
+  {
     if(error)
     {
       LogMessage("Ошибка добавления аватара пользователю [" + login + "]: ");
@@ -93,7 +95,8 @@ function AddAvatarForUser(login, filePath){
 //Добавляет в БД новое сообщение, после чего возвращает время его добавления
 function AddNewMessage(login, text){
   let time = GetCurrentTime();
-  connection.query('INSERT INTO `messages` (`login`, `message_text`, `time`) VALUES (?, ?, ?);', [login, text, time], function(error, results){
+  connection.query('INSERT INTO `messages` (`login`, `message_text`, `time`) VALUES (?, ?, ?);', [login, text, time], (error) =>
+  {
     if(error)
     {
       LogMessage("Ошибка добавления сообщения в бд: ");
@@ -102,12 +105,40 @@ function AddNewMessage(login, text){
     }
     else
     {
-      LogMessage("Пользователь [login: " + login + "] прислал сообщение: " + results);
+      LogMessage("Пользователь [login: " + login + "] прислал сообщение: ");
     }
   });
 
   return time;
 }
+
+//Проверка правильности введенных логина и пароля
+function IsCorrectPassword(login, password) {
+
+  let checkPass;
+
+  connection.query('SELECT password FROM users WHERE login = ?', [login] , (error, result) =>
+  {
+    if(error)
+    {
+      LogMessage("Ошибка запроса пароля для [login: " + login + "]");
+      throw error;
+      //TODO: Добавить throw и обработчик ошибки
+    }
+    else
+    {
+      checkPass = result[0].password;
+    }
+  });
+
+  LogMessage(checkPass);
+  // if(result[0].password == password)
+  // {
+  //   return true;
+  // }
+  // return false;
+}
+
 
 //---------- Функции сервера --------------------------------------------------------------
 
@@ -170,23 +201,42 @@ users = [];
 //Подключения на данный момент
 connections = [];
 
-io.sockets.on('connection', function(socket){
+io.sockets.on('connection', (socket) =>
+{
   LogMessage("Кто-то подключился");
   connections.push(socket);
 
   //----------события для каждого нового сокета-----------
 
-  socket.on('disconnect', function(data){
+  socket.on('disconnect', (data) =>
+  {
     connections.splice(connections.indexOf(socket), 1);
     LogMessage("Юзер отключился");
   });
 
-  socket.on('send_message', function(data){
+  socket.on('send_message', (data) =>
+  {
     let time = AddNewMessage(data.login, data.message);
     console.log(time);
     //вызываем событие и передаем в событие объект
     io.sockets.emit('add_new_message', {message: data.message, login: data.login, time: time});
     LogMessage(data.login + " Отправил сообщение");
+  });
+
+  socket.on('login', (data) =>
+  {
+    let login = data.login;
+    let password = data.password;
+    if(IsCorrectPassword(login, password))
+    {
+      io.sockets.emit('correct_login', login);
+      LogMessage(login + " Вошел");
+    }
+    else
+    {
+      io.sockets.emit('incorrect_login', login);
+      LogMessage(login + " Ошибка входа");
+    }
   });
 
 });
